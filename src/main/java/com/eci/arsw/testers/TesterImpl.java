@@ -1,13 +1,12 @@
 package com.eci.arsw.testers;
 
 import com.eci.arsw.drivers.Drivers;
-import com.eci.arsw.notifiers.Notifier;
+import org.junit.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.IOException;
+import static org.junit.Assert.assertEquals;
 
 public class TesterImpl implements Tester {
 
@@ -24,21 +23,17 @@ public class TesterImpl implements Tester {
     }
 
     @Override
+    @Test
     public void login(String username, String password) throws TestException {
         if (webDriver == null) throw new TestException(TestException.DRIVER_NOT_SETUP);
         webDriver.get(url);
+        WebElement webElement = webDriver.findElement(By.id("username"));
+        webElement.sendKeys(username);
+        webElement = webDriver.findElement(By.id("password"));
+        webElement.sendKeys(password);
+        webDriver.findElement(By.id("sign_in")).click();
         waitOneSecond();
-        //FALTA IMPLEMENTAR
-    }
-
-    @Override
-    public void showResults() {
-        Notifier.printNotifications();
-    }
-
-    @Override
-    public void writeResults() throws IOException {
-        Notifier.writeNotifications();
+        assertEquals(url + "index.html", webDriver.getCurrentUrl());
     }
 
     @Override
@@ -65,7 +60,7 @@ public class TesterImpl implements Tester {
         return webDriver.findElement(locator);
     }
 
-    private void waitOneSecond(){
+    private void waitOneSecond() {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {

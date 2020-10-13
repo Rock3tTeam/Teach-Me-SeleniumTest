@@ -9,10 +9,6 @@ public interface Tester {
 
     void login(String username, String password) throws TestException;
 
-    void showResults();
-
-    void writeResults() throws IOException;
-
     void close() throws TestException;
 
     void reload() throws TestException;

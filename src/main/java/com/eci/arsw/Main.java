@@ -15,8 +15,6 @@ public class Main {
         tester.setUpDriver(driver);
         tester.login(username, password);
         tester.close();
-        tester.showResults();
-        tester.writeResults();
     }
 }
 
