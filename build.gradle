@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+}
+
+group 'com.eci.arsw'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'junit:junit:4.12'
+    // https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
+    implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.14.0'
+}
