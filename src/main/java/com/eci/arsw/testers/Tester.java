@@ -2,8 +2,6 @@ package com.eci.arsw.testers;
 
 import com.eci.arsw.drivers.Drivers;
 
-import java.io.IOException;
-
 public interface Tester {
     void setUpDriver(Drivers driver);
 
