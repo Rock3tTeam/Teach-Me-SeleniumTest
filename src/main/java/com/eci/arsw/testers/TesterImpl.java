@@ -37,10 +37,8 @@ public class TesterImpl implements Tester {
     public void login(String username, String password) throws TestException {
         if (webDriver == null) throw new TestException(TestException.DRIVER_NOT_SETUP);
         webDriver.get(url);
-        webElement = webDriver.findElement(By.id("username"));
-        webElement.sendKeys(username);
-        webElement = webDriver.findElement(By.id("password"));
-        webElement.sendKeys(password);
+        sendKeysToAnElementById("username", username);
+        sendKeysToAnElementById("password", password);
         webDriver.findElement(By.id("sign_in")).click();
         waitOneSecond();
         assertEquals(url + "index.html", webDriver.getCurrentUrl());
@@ -63,8 +61,7 @@ public class TesterImpl implements Tester {
     @Test
     public void searchTest(String value, int amount) throws TestException {
         if (webDriver == null) throw new TestException(TestException.DRIVER_NOT_SETUP);
-        webElement = webDriver.findElement(By.id("class_search"));
-        webElement.sendKeys(value);
+        sendKeysToAnElementById("class_search", value);
         webDriver.findElement(By.xpath("/html/body/div/div/div/div/div/div[1]/div[1]/form/div/a")).click();
         waitOneSecond();
         String xpathBeginning = "//*[@id=\"table_body\"]/tr[";
@@ -81,19 +78,14 @@ public class TesterImpl implements Tester {
     public void createClassTest(String className, String classDescription, String classCapacity) throws TestException {
         if (webDriver == null) throw new TestException(TestException.DRIVER_NOT_SETUP);
         element(By.xpath("/html/body/div/div/div/div/div/div[5]/div/button")).click();
-        webElement = webDriver.findElement(By.id("class_name"));
-        webElement.sendKeys(className);
-        webElement = webDriver.findElement(By.id("description_class"));
-        webElement.sendKeys(classDescription);
-        webElement = webDriver.findElement(By.id("class_capacity"));
-        webElement.sendKeys(classCapacity);
-        webElement = webDriver.findElement(By.id("datetimepickercreate_input"));
+        sendKeysToAnElementById("class_name", className);
+        sendKeysToAnElementById("description_class", classDescription);
+        sendKeysToAnElementById("class_capacity", classCapacity);
         long actualTime = System.currentTimeMillis();
         Timestamp actualDate = new Timestamp(actualTime + 100000);
-        webElement.sendKeys(getTimeFormat(actualDate));
-        webElement = webDriver.findElement(By.id("datetimepickercreate_input1"));
         Timestamp finishDate = new Timestamp(actualTime + 200000);
-        webElement.sendKeys(getTimeFormat(finishDate));
+        sendKeysToAnElementById("datetimepickercreate_input", getTimeFormat(actualDate));
+        sendKeysToAnElementById("datetimepickercreate_input1", getTimeFormat(finishDate));
         webDriver.findElement(By.id("create_button")).click();
         element(By.xpath("/html/body/div[2]/div/div[3]/button[1]")).click();
         webDriver.findElement(By.xpath("/html/body/div/div/div/div/div/div[8]/div/button")).click();
@@ -111,17 +103,20 @@ public class TesterImpl implements Tester {
     @Test
     public void deleteClassTest(String value) throws TestException {
         if (webDriver == null) throw new TestException(TestException.DRIVER_NOT_SETUP);
-        webElement = webDriver.findElement(By.xpath("/html/body/div/div/div/div/div/div[5]/div[2]/div/button[1]"));
-        webElement.click();
+        webDriver.findElement(By.xpath("/html/body/div/div/div/div/div/div[5]/div[2]/div/button[1]")).click();
         element(By.xpath("/html/body/div[2]/div/div[3]/button[1]")).click();
         element(By.xpath("/html/body/div[2]/div/div[3]/button[1]")).click();
-        webElement = webDriver.findElement(By.id("class_search"));
-        webElement.sendKeys(value);
+        sendKeysToAnElementById("class_search", value);
         webDriver.findElement(By.xpath("/html/body/div/div/div/div/div/div[1]/div[1]/form/div/a")).click();
         waitOneSecond();
         webElement = webDriver.findElement(By.id("table_footer"));
-        assertEquals("No se encontraron clases",webElement.getText());
+        assertEquals("No se encontraron clases", webElement.getText());
         webDriver.findElement(By.xpath("/html/body/div/div/div/div/div/div[4]/div/button")).click();
+    }
+
+    private void sendKeysToAnElementById(String elementId, String value) {
+        WebElement element = webDriver.findElement(By.id(elementId));
+        element.sendKeys(value);
     }
 
     private String getTimeFormat(Timestamp date) {
