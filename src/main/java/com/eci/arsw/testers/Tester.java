@@ -11,5 +11,7 @@ public interface Tester {
 
     void reload() throws TestException;
 
-    void search(String value) throws TestException;
+    void searchTest(String value, int amount) throws TestException;
+
+    void createClassTest(String className, String classDescription, String classCapacity) throws TestException;
 }

@@ -6,6 +6,9 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -51,7 +54,7 @@ public class TesterImpl implements Tester {
 
     @Override
     @Test
-    public void search(String value) throws TestException {
+    public void searchTest(String value, int amount) throws TestException {
         if (webDriver == null) throw new TestException(TestException.DRIVER_NOT_SETUP);
         WebElement webElement = webDriver.findElement(By.id("class_search"));
         webElement.sendKeys(value);
@@ -59,10 +62,47 @@ public class TesterImpl implements Tester {
         waitOneSecond();
         String xpathBeginning = "//*[@id=\"table_body\"]/tr[";
         String xpathFinish = "]/td[1]";
-        for (int i = 0; i < 2; i++) {
-            webElement = webDriver.findElement(By.xpath(xpathBeginning + (i+1) + xpathFinish));
+        for (int i = 0; i < amount; i++) {
+            webElement = webDriver.findElement(By.xpath(xpathBeginning + (i + 1) + xpathFinish));
             assertTrue(webElement.getText().contains(value));
         }
+        webDriver.findElement(By.xpath("/html/body/div/div/div/div/div/div[4]/div/button")).click();
+    }
+
+    @Override
+    @Test
+    public void createClassTest(String className, String classDescription, String classCapacity) throws TestException {
+        if (webDriver == null) throw new TestException(TestException.DRIVER_NOT_SETUP);
+        element(By.xpath("/html/body/div/div/div/div/div/div[5]/div/button")).click();
+        WebElement webElement = webDriver.findElement(By.id("class_name"));
+        webElement.sendKeys(className);
+        webElement = webDriver.findElement(By.id("description_class"));
+        webElement.sendKeys(classDescription);
+        webElement = webDriver.findElement(By.id("class_capacity"));
+        webElement.sendKeys(classCapacity);
+        webElement = webDriver.findElement(By.id("datetimepickercreate_input"));
+        long actualTime = System.currentTimeMillis();
+        Timestamp actualDate = new Timestamp(actualTime + 100000);
+        webElement.sendKeys(getTimeFormat(actualDate));
+        webElement = webDriver.findElement(By.id("datetimepickercreate_input1"));
+        Timestamp finishDate = new Timestamp(actualTime + 200000);
+        webElement.sendKeys(getTimeFormat(finishDate));
+        webDriver.findElement(By.id("create_button")).click();
+        element(By.xpath("/html/body/div[2]/div/div[3]/button[1]")).click();
+        webDriver.findElement(By.xpath("/html/body/div/div/div/div/div/div[8]/div/button")).click();
+        webElement = element(By.xpath("/html/body/div/div/div/div/div/div[4]/div[2]/div/button"));
+        webElement.click();
+        waitOneSecond();
+        webElement.sendKeys(Keys.ARROW_DOWN);
+        webElement.sendKeys(Keys.ENTER);
+        waitOneSecond();
+        webElement = element(By.xpath("//*[@id=\"description_class\"]"));
+        assertEquals(classDescription, webElement.getText());
+    }
+
+    private String getTimeFormat(Timestamp date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return formatter.format(date);
     }
 
     public WebElement element(By locator) {
