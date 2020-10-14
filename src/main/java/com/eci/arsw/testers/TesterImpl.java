@@ -2,15 +2,12 @@ package com.eci.arsw.testers;
 
 import com.eci.arsw.drivers.Drivers;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TesterImpl implements Tester {
 
@@ -50,6 +47,22 @@ public class TesterImpl implements Tester {
     public void reload() throws TestException {
         if (webDriver == null) throw new TestException(TestException.DRIVER_NOT_SETUP);
         //webDriver.get(url + "/faces/comunidadInicio.xhtml");
+    }
+
+    @Override
+    @Test
+    public void search(String value) throws TestException {
+        if (webDriver == null) throw new TestException(TestException.DRIVER_NOT_SETUP);
+        WebElement webElement = webDriver.findElement(By.id("class_search"));
+        webElement.sendKeys(value);
+        webDriver.findElement(By.xpath("/html/body/div/div/div/div/div/div[1]/div[1]/form/div/a")).click();
+        waitOneSecond();
+        String xpathBeginning = "//*[@id=\"table_body\"]/tr[";
+        String xpathFinish = "]/td[1]";
+        for (int i = 0; i < 2; i++) {
+            webElement = webDriver.findElement(By.xpath(xpathBeginning + (i+1) + xpathFinish));
+            assertTrue(webElement.getText().contains(value));
+        }
     }
 
     public WebElement element(By locator) {

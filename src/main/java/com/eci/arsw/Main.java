@@ -14,6 +14,7 @@ public class Main {
         Drivers driver = Drivers.EDGE;
         tester.setUpDriver(driver);
         tester.login(username, password);
+        tester.search("MBDA");
         tester.close();
     }
 }

@@ -11,4 +11,5 @@ public interface Tester {
 
     void reload() throws TestException;
 
+    void search(String value) throws TestException;
 }
