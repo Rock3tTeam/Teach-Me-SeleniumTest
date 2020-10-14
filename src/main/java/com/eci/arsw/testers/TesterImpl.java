@@ -2,7 +2,12 @@ package com.eci.arsw.testers;
 
 import com.eci.arsw.drivers.Drivers;
 import org.junit.Test;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -16,6 +21,7 @@ public class TesterImpl implements Tester {
 
     private final String url;
     private WebDriver webDriver;
+    private WebElement webElement;
 
     public TesterImpl(String url) {
         this.url = url;
@@ -31,7 +37,7 @@ public class TesterImpl implements Tester {
     public void login(String username, String password) throws TestException {
         if (webDriver == null) throw new TestException(TestException.DRIVER_NOT_SETUP);
         webDriver.get(url);
-        WebElement webElement = webDriver.findElement(By.id("username"));
+        webElement = webDriver.findElement(By.id("username"));
         webElement.sendKeys(username);
         webElement = webDriver.findElement(By.id("password"));
         webElement.sendKeys(password);
@@ -43,6 +49,7 @@ public class TesterImpl implements Tester {
     @Override
     public void close() throws TestException {
         if (webDriver == null) throw new TestException(TestException.DRIVER_NOT_SETUP);
+        webDriver.findElement(By.xpath("/html/body/div/div/div/div/div/div[1]/div[2]/button[2]")).click();
         webDriver.close();
     }
 
@@ -56,7 +63,7 @@ public class TesterImpl implements Tester {
     @Test
     public void searchTest(String value, int amount) throws TestException {
         if (webDriver == null) throw new TestException(TestException.DRIVER_NOT_SETUP);
-        WebElement webElement = webDriver.findElement(By.id("class_search"));
+        webElement = webDriver.findElement(By.id("class_search"));
         webElement.sendKeys(value);
         webDriver.findElement(By.xpath("/html/body/div/div/div/div/div/div[1]/div[1]/form/div/a")).click();
         waitOneSecond();
@@ -74,7 +81,7 @@ public class TesterImpl implements Tester {
     public void createClassTest(String className, String classDescription, String classCapacity) throws TestException {
         if (webDriver == null) throw new TestException(TestException.DRIVER_NOT_SETUP);
         element(By.xpath("/html/body/div/div/div/div/div/div[5]/div/button")).click();
-        WebElement webElement = webDriver.findElement(By.id("class_name"));
+        webElement = webDriver.findElement(By.id("class_name"));
         webElement.sendKeys(className);
         webElement = webDriver.findElement(By.id("description_class"));
         webElement.sendKeys(classDescription);
@@ -98,6 +105,23 @@ public class TesterImpl implements Tester {
         waitOneSecond();
         webElement = element(By.xpath("//*[@id=\"description_class\"]"));
         assertEquals(classDescription, webElement.getText());
+    }
+
+    @Override
+    @Test
+    public void deleteClassTest(String value) throws TestException {
+        if (webDriver == null) throw new TestException(TestException.DRIVER_NOT_SETUP);
+        webElement = webDriver.findElement(By.xpath("/html/body/div/div/div/div/div/div[5]/div[2]/div/button[1]"));
+        webElement.click();
+        element(By.xpath("/html/body/div[2]/div/div[3]/button[1]")).click();
+        element(By.xpath("/html/body/div[2]/div/div[3]/button[1]")).click();
+        webElement = webDriver.findElement(By.id("class_search"));
+        webElement.sendKeys(value);
+        webDriver.findElement(By.xpath("/html/body/div/div/div/div/div/div[1]/div[1]/form/div/a")).click();
+        waitOneSecond();
+        webElement = webDriver.findElement(By.id("table_footer"));
+        assertEquals("No se encontraron clases",webElement.getText());
+        webDriver.findElement(By.xpath("/html/body/div/div/div/div/div/div[4]/div/button")).click();
     }
 
     private String getTimeFormat(Timestamp date) {

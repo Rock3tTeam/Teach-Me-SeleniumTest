@@ -14,4 +14,6 @@ public interface Tester {
     void searchTest(String value, int amount) throws TestException;
 
     void createClassTest(String className, String classDescription, String classCapacity) throws TestException;
+
+    void deleteClassTest(String value) throws TestException;
 }

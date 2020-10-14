@@ -16,6 +16,7 @@ public class Main {
         tester.login(username, password);
         tester.searchTest("MBDA",2);
         tester.createClassTest("Selenium","Clase de prueba para Selenium","5");
+        tester.deleteClassTest("Selenium");
         tester.close();
     }
 }
