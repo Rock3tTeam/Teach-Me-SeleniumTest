@@ -3,9 +3,11 @@ package com.eci.arsw.testers;
 import com.eci.arsw.drivers.Drivers;
 
 public interface Tester {
-    void setUpDriver(Drivers driver);
+    void setUpDriver(Drivers driver) throws TestException;
 
     void login(String username, String password) throws TestException;
+
+    void failedLoginTest(String username, String password) throws TestException;
 
     void close() throws TestException;
 

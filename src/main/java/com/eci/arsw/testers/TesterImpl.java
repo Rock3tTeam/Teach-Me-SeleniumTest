@@ -28,20 +28,34 @@ public class TesterImpl implements Tester {
     }
 
     @Override
-    public void setUpDriver(Drivers driver) {
+    public void setUpDriver(Drivers driver) throws TestException {
         webDriver = driver.getWebDriver();
+        if (url == null) {
+            throw new TestException("No hay definida una url");
+        }
+        webDriver.get(url);
     }
 
     @Override
     @Test
     public void login(String username, String password) throws TestException {
         if (webDriver == null) throw new TestException(TestException.DRIVER_NOT_SETUP);
-        webDriver.get(url);
         sendKeysToAnElementById("username", username);
         sendKeysToAnElementById("password", password);
         webDriver.findElement(By.id("sign_in")).click();
         waitOneSecond();
         assertEquals(url + "index.html", webDriver.getCurrentUrl());
+    }
+
+    @Override
+    public void failedLoginTest(String username, String password) throws TestException {
+        if (webDriver == null) throw new TestException(TestException.DRIVER_NOT_SETUP);
+        sendKeysToAnElementById("username", username);
+        sendKeysToAnElementById("password", password);
+        webDriver.findElement(By.id("sign_in")).click();
+        webElement = element(By.id("swal2-content"));
+        assertEquals("Usuario o clave incorrectos", webElement.getText());
+        webDriver.findElement(By.xpath("/html/body/div[2]/div/div[3]/button[1]")).click();
     }
 
     @Override
@@ -54,7 +68,10 @@ public class TesterImpl implements Tester {
     @Override
     public void reload() throws TestException {
         if (webDriver == null) throw new TestException(TestException.DRIVER_NOT_SETUP);
-        //webDriver.get(url + "/faces/comunidadInicio.xhtml");
+        if (url == null) {
+            throw new TestException("No hay definida una url");
+        }
+        webDriver.get(url);
     }
 
     @Override
@@ -91,7 +108,6 @@ public class TesterImpl implements Tester {
         webDriver.findElement(By.xpath("/html/body/div/div/div/div/div/div[8]/div/button")).click();
         webElement = element(By.xpath("/html/body/div/div/div/div/div/div[4]/div[2]/div/button"));
         webElement.click();
-        waitOneSecond();
         webElement.sendKeys(Keys.ARROW_DOWN);
         webElement.sendKeys(Keys.ENTER);
         waitOneSecond();
