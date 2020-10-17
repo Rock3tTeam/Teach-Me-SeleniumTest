@@ -108,6 +108,7 @@ public class TesterImpl implements Tester {
         webDriver.findElement(By.xpath("/html/body/div/div/div/div/div/div[8]/div/button")).click();
         webElement = element(By.xpath("/html/body/div/div/div/div/div/div[4]/div[2]/div/button"));
         webElement.click();
+        waitOneSecond();
         webElement.sendKeys(Keys.ARROW_DOWN);
         webElement.sendKeys(Keys.ENTER);
         waitOneSecond();
