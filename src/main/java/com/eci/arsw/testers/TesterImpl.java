@@ -123,6 +123,7 @@ public class TesterImpl implements Tester {
         webDriver.findElement(By.xpath("/html/body/div/div/div/div/div/div[5]/div[2]/div/button[1]")).click();
         element(By.xpath("/html/body/div[2]/div/div[3]/button[1]")).click();
         element(By.xpath("/html/body/div[2]/div/div[3]/button[1]")).click();
+        waitOneSecond();
         sendKeysToAnElementById("class_search", value);
         webDriver.findElement(By.xpath("/html/body/div/div/div/div/div/div[1]/div[1]/form/div/a")).click();
         waitOneSecond();
